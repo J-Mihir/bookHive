@@ -1,90 +1,84 @@
-BookHive: A Go Library Management API
-This repository contains the backend for BookHive, a complete library management API crafted with Go. It's designed to be both powerful and secure, offering a full suite of features for managing users, cataloging books, and handling complex transactions like borrowing and reservations. The entire system is protected by a modern JWT authentication layer with role-based access for admins and members.
+# BookHive: A Go Library Management API
+
+![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
+
+A complete library management API crafted with Go. Designed to be both powerful and secure, offering a full suite of features for managing users, cataloging books, and handling complex transactions like borrowing and reservations. The entire system is protected by a modern JWT authentication layer with role-based access for admins and members.
 
 ✨ Features
-User Management: Full CRUD operations for library members and staff.
 
-JWT Authentication: Secure user registration and login using JSON Web Tokens.
-
-Role-Based Access Control: Differentiates between staff (admin) and student (member) roles, protecting sensitive endpoints.
-
-Book & Inventory Management: Full CRUD for books, including tracking total copies and availability.
-
-Category Management: Organize books by genre or category.
-
-Transaction System:
-
-Borrow and return books.
-
-Automatic due date tracking.
-
-Fine calculation for overdue books.
-
-Borrowing Rules: Enforces business logic, such as a limit on the number of books a member can borrow.
-
-Reservation System: Allows members to reserve books that are currently borrowed.
+- 🔐 **User Management**: Full CRUD operations for library members and staff
+- 🎟️ **JWT Authentication**: Secure user registration and login using JSON Web Tokens
+- 👥 **Role-Based Access Control**: Differentiates between `staff` (admin) and `student` (member) roles, protecting sensitive endpoints
+- 📚 **Book & Inventory Management**: Full CRUD for books, including tracking total copies and availability
+- 🏷️ **Category Management**: Organize books by genre or category
+- 🔄 **Transaction System**:
+  - Borrow and return books
+  - Automatic due date tracking
+  - Fine calculation for overdue books
+- 📖 **Borrowing Rules**: Enforces business logic, such as a limit on the number of books a member can borrow
+- 📅 **Reservation System**: Allows members to reserve books that are currently borrowed
 
 🛠️ Tech Stack
-Language: Go
 
-Router: Gorilla Mux
-
-ORM: GORM
-
-Authentication: golang-jwt/jwt
-
-Password Hashing: bcrypt
-
-Database: MySQL (or any GORM-supported SQL database)
+| Technology | Purpose |
+|------------|---------|
+| **Go** | Primary language |
+| **Gorilla Mux** | HTTP router |
+| **GORM** | ORM for database operations |
+| **golang-jwt/jwt** | JWT authentication |
+| **bcrypt** | Password hashing |
+| **MySQL** | Database (supports any GORM-compatible SQL database) |
 
 🚀 Getting Started
-Prerequisites
-Go (version 1.18 or higher)
 
-A running SQL database instance (e.g., MySQL)
+### Prerequisites
 
-Postman for API testing
+- Go (version 1.18 or higher)
+- MySQL or any GORM-supported SQL database
+- Postman (for API testing)
 
-Installation & Setup
-Clone the repository:
+### Installation & Setup
 
-git clone <your-repository-url>
-cd BookHive
+1. **Clone the repository**
+   ```bash
+   git clone <your-repository-url>
+   cd BookHive
+   ```
 
-Install dependencies:
+2. **Install dependencies**
+   ```bash
+   go mod tidy
+   ```
 
-go mod tidy
+3. **Configure your database**
+   
+   Open `pkg/config/app.go` and update the database connection string:
+   ```go
+   d, err := gorm.Open(mysql.Open("user:password@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"), &gorm.Config{})
+   ```
 
-Configure your database:
+4. **Set environment variables**
+   ```bash
+   export JWT_SECRET_KEY="your-long-and-super-secret-string"
+   ```
 
-Open the pkg/config/app.go file.
+5. **Run the server**
+   ```bash
+   go run cmd/main/main.go
+   ```
 
-Update the database connection string with your credentials:
+The server will be running on `http://localhost:9010`
 
-d, err := gorm.Open(mysql.Open("user:password@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"), &gorm.Config{})
+🧪 API Endpoints & Testing
 
-Set Environment Variables:
+### Authentication
 
-The application uses a secret key to sign JWTs. Set this in the terminal session where you will run the server.
-
-export JWT_SECRET_KEY="your-long-and-super-secret-string"
-
-Run the server:
-
-go run cmd/main/main.go
-
-The server should now be running on http://localhost:9010.
-
-🧪 API Endpoints & Testing with Postman
-Below is a complete guide to testing all available endpoints.
-
-Authentication
-1. Register a New User
-Method: POST
-
-URL: /register
-
-Body (JSON):
+#### Register a New User
+```http
+POST /register
+Content-Type: application/json
 
 {
     "name": "Test User",
@@ -93,48 +87,47 @@ Body (JSON):
     "membership_id": "MEMBER001",
     "role": "student"
 }
+```
 
-2. User Login
-Method: POST
-
-URL: /login
-
-Body (JSON):
+#### User Login
+```http
+POST /login
+Content-Type: application/json
 
 {
     "email": "test@example.com",
     "password": "password123"
 }
+```
 
-Response:
-
+**Response:**
+```json
 {
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
+```
 
-Note: Copy this token. You will need it for all protected requests.
+> **Note:** Copy this token for use in protected requests as `Authorization: Bearer <token>`
 
-Books
-Protected routes require a Bearer Token in the Authorization header.
+### Books
 
-Get All Books (Public)
-Method: GET
+> 🔒 Protected routes require Bearer Token in Authorization header
 
-URL: /books
+#### Get All Books (Public)
+```http
+GET /books
+```
 
-Get Book by ID (Public)
-Method: GET
+#### Get Book by ID (Public)
+```http
+GET /books/{bookId}
+```
 
-URL: /books/{bookId}
-
-Create a Book (Admin Only)
-Method: POST
-
-URL: /books
-
-Auth: Bearer Token
-
-Body (JSON):
+#### Create a Book (Admin Only)
+```http
+POST /books
+Authorization: Bearer <token>
+Content-Type: application/json
 
 {
     "name": "The Go Programming Language",
@@ -143,36 +136,40 @@ Body (JSON):
     "copies": 5,
     "category_id": 1
 }
+```
 
-Transactions
-Borrow a Book
-Method: POST
+### Transactions
 
-URL: /transactions/borrow
-
-Body (JSON):
+#### Borrow a Book
+```http
+POST /transactions/borrow
+Content-Type: application/json
 
 {
     "user_id": 1,
     "book_id": 1
 }
+```
 
-Return a Book
-Method: PUT
+#### Return a Book
+```http
+PUT /transactions/{transactionId}/return
+```
 
-URL: /transactions/{transactionId}/return
+### Reservations
 
-Reservations
-Create a Reservation
-Method: POST
-
-URL: /reservations
-
-Auth: Bearer Token
-
-Body (JSON):
+#### Create a Reservation
+```http
+POST /reservations
+Authorization: Bearer <token>
+Content-Type: application/json
 
 {
     "user_id": 2,
     "book_id": 1
 }
+```
+
+---
+
+*Built with ❤️ using Go*
