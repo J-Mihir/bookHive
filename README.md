@@ -170,6 +170,43 @@ Content-Type: application/json
 }
 ```
 
+# 🤝 Contributing
+
+We welcome contributions to BookHive! Whether you're fixing bugs, adding new features, or improving documentation, your help is appreciated.
+
+## How to Contribute
+
+1. **Fork the repository**
+2. **Create a feature branch**
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. **Make your changes**
+4. **Commit your changes**
+   ```bash
+   git commit -m 'Add some amazing feature'
+   ```
+5. **Push to the branch**
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+6. **Open a Pull Request**
+
+## What We're Looking For
+
+- 🐛 Bug fixes
+- ✨ New features
+- 📚 Documentation improvements
+- 🧪 Test coverage improvements
+- 🎨 Code style improvements
+
+## Code Guidelines
+
+- Follow Go best practices and conventions
+- Write clear, descriptive commit messages
+- Add tests for new features
+- Update documentation as needed
+
 ---
 
-*Built with ❤️ using Go*
+*Built with ❤️ using Go • Open for contributions*
